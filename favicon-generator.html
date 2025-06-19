@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator</title>
+</head>
+<body>
+    <h1>Calculator Favicon Generator</h1>
+    <p>Use this page to generate a favicon.ico file:</p>
+    
+    <canvas id="faviconCanvas" width="32" height="32" style="border: 1px solid #ccc;"></canvas>
+    
+    <br><br>
+    <button onclick="generateFavicon()">Generate Favicon</button>
+    <a id="downloadLink" style="display: none;">Download favicon.ico</a>
+    
+    <script>
+        function generateFavicon() {
+            const canvas = document.getElementById('faviconCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, 32, 32);
+            
+            // Draw calculator body
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(2, 2, 28, 28);
+            
+            // Draw display
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(4, 4, 24, 8);
+            
+            // Draw display text
+            ctx.fillStyle = '#10b981';
+            ctx.font = '6px monospace';
+            ctx.textAlign = 'right';
+            ctx.fillText('123', 26, 11);
+            
+            // Draw buttons
+            const buttonColors = {
+                gray: '#6b7280',
+                orange: '#f59e0b',
+                green: '#10b981'
+            };
+            
+            // Button positions and colors
+            const buttons = [
+                {x: 4, y: 14, w: 5, h: 3, color: 'gray', text: 'C'},
+                {x: 11, y: 14, w: 5, h: 3, color: 'gray', text: '±'},
+                {x: 18, y: 14, w: 5, h: 3, color: 'orange', text: '÷'},
+                {x: 25, y: 14, w: 3, h: 3, color: 'orange', text: '×'},
+                {x: 4, y: 19, w: 5, h: 3, color: 'gray', text: '7'},
+                {x: 11, y: 19, w: 5, h: 3, color: 'gray', text: '8'},
+                {x: 18, y: 19, w: 5, h: 3, color: 'gray', text: '9'},
+                {x: 25, y: 19, w: 3, h: 3, color: 'orange', text: '-'},
+                {x: 4, y: 24, w: 5, h: 3, color: 'gray', text: '4'},
+                {x: 11, y: 24, w: 5, h: 3, color: 'gray', text: '5'},
+                {x: 18, y: 24, w: 5, h: 3, color: 'gray', text: '6'},
+                {x: 25, y: 24, w: 3, h: 6, color: 'green', text: '+'},
+                {x: 4, y: 29, w: 11, h: 3, color: 'gray', text: '0'},
+                {x: 18, y: 29, w: 5, h: 3, color: 'gray', text: '.'}
+            ];
+            
+            buttons.forEach(button => {
+                ctx.fillStyle = buttonColors[button.color];
+                ctx.fillRect(button.x, button.y, button.w, button.h);
+                
+                // Draw button text
+                ctx.fillStyle = 'white';
+                ctx.font = '3px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(button.text, button.x + button.w/2, button.y + button.h/2 + 1);
+            });
+            
+            // Convert to favicon
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.getElementById('downloadLink');
+                link.href = url;
+                link.download = 'favicon.ico';
+                link.style.display = 'inline';
+            }, 'image/x-icon');
+        }
+        
+        // Generate on load
+        window.onload = generateFavicon;
+    </script>
+</body>
+</html> 
