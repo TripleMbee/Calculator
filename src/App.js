@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Calculator from './components/Calculator';
 import History from './components/History';
 import Stars from './components/Stars';
-import { History as HistoryIcon, Calculator as CalculatorIcon, Settings, X } from 'lucide-react';
+import { History as HistoryIcon, Calculator as CalculatorIcon, Settings } from 'lucide-react';
 
 function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState([]);
-  const [theme, setTheme] = useState('dark');
 
   // Load history from localStorage on component mount
   useEffect(() => {

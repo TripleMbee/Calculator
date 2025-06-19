@@ -6,10 +6,6 @@ const History = ({ history, onClear, onUseItem, onClose }) => {
     navigator.clipboard.writeText(text);
   };
 
-  const formatCalculation = (calculation) => {
-    return calculation.replace('×', '*').replace('÷', '/');
-  };
-
   return (
     <div className="glass-effect rounded-2xl p-6 shadow-2xl h-fit max-h-[600px] overflow-hidden">
       {/* Header */}

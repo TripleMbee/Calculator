@@ -188,7 +188,7 @@ const Calculator = ({ onCalculate }) => {
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [display, waitingForOperand]);
+  }, [display, waitingForOperand, inputDigit, inputDecimal, performOperation, performCalculation, clearAll]);
 
   return (
     <div className="glass-effect rounded-2xl p-6 shadow-2xl">
