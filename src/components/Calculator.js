@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Minus, X, Divide, Percent, Square, 
   RotateCcw, Delete, Equal, Dot, Hash, Pi, Infinity 
@@ -10,6 +10,13 @@ const Calculator = ({ onCalculate }) => {
   const [operation, setOperation] = useState(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [memory, setMemory] = useState(0);
+
+  // Use refs to store the latest function references
+  const inputDigitRef = useRef();
+  const inputDecimalRef = useRef();
+  const performOperationRef = useRef();
+  const performCalculationRef = useRef();
+  const clearAllRef = useRef();
 
   const clearAll = () => {
     setDisplay('0');
@@ -155,28 +162,37 @@ const Calculator = ({ onCalculate }) => {
     setMemory(memory - parseFloat(display));
   };
 
+  // Update refs with latest function references
+  useEffect(() => {
+    inputDigitRef.current = inputDigit;
+    inputDecimalRef.current = inputDecimal;
+    performOperationRef.current = performOperation;
+    performCalculationRef.current = performCalculation;
+    clearAllRef.current = clearAll;
+  });
+
   // Keyboard support
   useEffect(() => {
     const handleKeyPress = (event) => {
       const { key } = event;
       
       if (key >= '0' && key <= '9') {
-        inputDigit(parseInt(key));
+        inputDigitRef.current(parseInt(key));
       } else if (key === '.') {
-        inputDecimal();
+        inputDecimalRef.current();
       } else if (key === '+') {
-        performOperation('+');
+        performOperationRef.current('+');
       } else if (key === '-') {
-        performOperation('-');
+        performOperationRef.current('-');
       } else if (key === '*') {
-        performOperation('×');
+        performOperationRef.current('×');
       } else if (key === '/') {
         event.preventDefault();
-        performOperation('÷');
+        performOperationRef.current('÷');
       } else if (key === 'Enter' || key === '=') {
-        performCalculation();
+        performCalculationRef.current();
       } else if (key === 'Escape') {
-        clearAll();
+        clearAllRef.current();
       } else if (key === 'Backspace') {
         if (display.length > 1) {
           setDisplay(display.slice(0, -1));
@@ -188,7 +204,7 @@ const Calculator = ({ onCalculate }) => {
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [display, waitingForOperand, inputDigit, inputDecimal, performOperation, performCalculation, clearAll]);
+  }, [display]);
 
   return (
     <div className="glass-effect rounded-2xl p-6 shadow-2xl">
