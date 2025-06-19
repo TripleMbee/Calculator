@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background-size: 400% 400%;
+            animation: galaxy 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        @keyframes galaxy {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 350px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: right;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .previous-operand {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            min-height: 20px;
+        }
+
+        .current-operand {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.operator {
+            background: rgba(255, 165, 0, 0.3);
+            color: #ffa500;
+        }
+
+        .btn.operator:hover {
+            background: rgba(255, 165, 0, 0.5);
+        }
+
+        .btn.equals {
+            background: rgba(0, 255, 127, 0.3);
+            color: #00ff7f;
+        }
+
+        .btn.equals:hover {
+            background: rgba(0, 255, 127, 0.5);
+        }
+
+        .btn.clear {
+            background: rgba(255, 69, 0, 0.3);
+            color: #ff4500;
+        }
+
+        .btn.clear:hover {
+            background: rgba(255, 69, 0, 0.5);
+        }
+
+        .btn.math-constant {
+            background: rgba(0, 204, 255, 0.3);
+            color: #8a2be2;
+            font-weight: bold;
+        }
+
+        .btn.math-constant:hover {
+            background: rgba(138, 43, 226, 0.5);
+        }
+
+        .span-2 {
+            grid-column: span 2;
+        }
+
+        .span-4 {
+            grid-column: span 4;
+        }
+
+        .title {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="calculator">
+        <div class="title">Galaxy Calculator</div>
+        
+        <div class="display">
+            <div class="previous-operand" id="previous-operand"></div>
+            <div class="current-operand" id="current-operand">0</div>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn clear" onclick="clearAll()">AC</button>
+            <button class="btn clear" onclick="deleteLast()">DEL</button>
+            <button class="btn operator" onclick="chooseOperation('÷')">÷</button>
+            <button class="btn operator" onclick="chooseOperation('×')">×</button>
+            
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn operator" onclick="chooseOperation('-')">-</button>
+            
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn operator" onclick="chooseOperation('+')">+</button>
+            
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn equals" onclick="compute()">=</button>
+            
+            <button class="btn span-2" onclick="appendNumber('0')">0</button>
+            <button class="btn" onclick="appendNumber('.')">.</button>
+            <button class="btn operator" onclick="chooseOperation('%')">%</button>
+            
+            <button class="btn math-constant" onclick="insertConstant('π')">π</button>
+            <button class="btn math-constant" onclick="insertConstant('φ')">φ</button>
+            <button class="btn math-constant" onclick="insertConstant('e')">e</button>
+            <button class="btn math-constant" onclick="insertConstant('√')">√</button>
+            
+            <button class="btn math-constant" onclick="insertConstant('∞')">∞</button>
+            <button class="btn math-constant" onclick="insertConstant('±')">±</button>
+            <button class="btn math-constant" onclick="insertConstant('²')">x²</button>
+            <button class="btn math-constant" onclick="insertConstant('³')">x³</button>
+        </div>
+    </div>
+
+    <script>
+        class Calculator {
+            constructor() {
+                this.previousOperand = '';
+                this.currentOperand = '0';
+                this.operation = undefined;
+                this.constants = {
+                    'π': Math.PI,
+                    'φ': 1.618033988749895, // Golden ratio
+                    'e': Math.E,
+                    '∞': Infinity
+                };
+            }
+
+            clear() {
+                this.currentOperand = '0';
+                this.previousOperand = '';
+                this.operation = undefined;
+            }
+
+            delete() {
+                if (this.currentOperand === '0') return;
+                this.currentOperand = this.currentOperand.toString().slice(0, -1);
+                if (this.currentOperand === '') this.currentOperand = '0';
+            }
+
+            appendNumber(number) {
+                if (number === '.' && this.currentOperand.includes('.')) return;
+                if (this.currentOperand === '0' && number !== '.') {
+                    this.currentOperand = number.toString();
+                } else {
+                    this.currentOperand = this.currentOperand.toString() + number.toString();
+                }
+            }
+
+            insertConstant(constant) {
+                if (constant in this.constants) {
+                    this.currentOperand = this.constants[constant].toString();
+                } else if (constant === '√') {
+                    const num = parseFloat(this.currentOperand);
+                    if (num >= 0) {
+                        this.currentOperand = Math.sqrt(num).toString();
+                    }
+                } else if (constant === '±') {
+                    const num = parseFloat(this.currentOperand);
+                    this.currentOperand = (-num).toString();
+                } else if (constant === '²') {
+                    const num = parseFloat(this.currentOperand);
+                    this.currentOperand = (num * num).toString();
+                } else if (constant === '³') {
+                    const num = parseFloat(this.currentOperand);
+                    this.currentOperand = (num * num * num).toString();
+                }
+            }
+
+            chooseOperation(operation) {
+                if (this.currentOperand === '') return;
+                if (this.previousOperand !== '') {
+                    this.compute();
+                }
+                this.operation = operation;
+                this.previousOperand = this.currentOperand;
+                this.currentOperand = '';
+            }
+
+            compute() {
+                let computation;
+                const prev = parseFloat(this.previousOperand);
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(prev) || isNaN(current)) return;
+
+                switch (this.operation) {
+                    case '+':
+                        computation = prev + current;
+                        break;
+                    case '-':
+                        computation = prev - current;
+                        break;
+                    case '×':
+                        computation = prev * current;
+                        break;
+                    case '÷':
+                        if (current === 0) {
+                            this.currentOperand = 'Error';
+                            return;
+                        }
+                        computation = prev / current;
+                        break;
+                    case '%':
+                        computation = prev % current;
+                        break;
+                    default:
+                        return;
+                }
+
+                this.currentOperand = computation.toString();
+                this.operation = undefined;
+                this.previousOperand = '';
+            }
+
+            getDisplayNumber(number) {
+                const stringNumber = number.toString();
+                const integerDigits = parseFloat(stringNumber.split('.')[0]);
+                const decimalDigits = stringNumber.split('.')[1];
+                let integerDisplay;
+                
+                if (isNaN(integerDigits)) {
+                    integerDisplay = '';
+                } else {
+                    integerDisplay = integerDigits.toLocaleString('en', {
+                        maximumFractionDigits: 0
+                    });
+                }
+                
+                if (decimalDigits != null) {
+                    return `${integerDisplay}.${decimalDigits}`;
+                } else {
+                    return integerDisplay;
+                }
+            }
+
+            updateDisplay() {
+                document.getElementById('current-operand').textContent = this.getDisplayNumber(this.currentOperand);
+                if (this.operation != null) {
+                    document.getElementById('previous-operand').textContent = 
+                        `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`;
+                } else {
+                    document.getElementById('previous-operand').textContent = '';
+                }
+            }
+        }
+
+        const calculator = new Calculator();
+
+        function clearAll() {
+            calculator.clear();
+            calculator.updateDisplay();
+        }
+
+        function deleteLast() {
+            calculator.delete();
+            calculator.updateDisplay();
+        }
+
+        function appendNumber(number) {
+            calculator.appendNumber(number);
+            calculator.updateDisplay();
+        }
+
+        function chooseOperation(operation) {
+            calculator.chooseOperation(operation);
+            calculator.updateDisplay();
+        }
+
+        function compute() {
+            calculator.compute();
+            calculator.updateDisplay();
+        }
+
+        function insertConstant(constant) {
+            calculator.insertConstant(constant);
+            calculator.updateDisplay();
+        }
+
+        // Create stars for galaxy effect
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 200;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const delay = Math.random() * 2;
+                
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = x + '%';
+                star.style.top = y + '%';
+                star.style.animationDelay = delay + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Initialize stars when page loads
+        window.addEventListener('load', createStars);
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9' || key === '.') {
+                appendNumber(key);
+            } else if (key === '+' || key === '-') {
+                chooseOperation(key);
+            } else if (key === '*') {
+                chooseOperation('×');
+            } else if (key === '/') {
+                event.preventDefault();
+                chooseOperation('÷');
+            } else if (key === 'Enter' || key === '=') {
+                compute();
+            } else if (key === 'Backspace') {
+                deleteLast();
+            } else if (key === 'Escape') {
+                clearAll();
+            }
+        });
+    </script>
+</body>
+</html>
